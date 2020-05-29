@@ -208,10 +208,6 @@ namespace LinqConsoleApp
             //2. Lambda and Extension methods
             var res2 = Emps.Where(e => e.Job == "Backend programmer");
             
-            Console.WriteLine("Przykład 1");
-            foreach(var e in res) Console.WriteLine(e.ToString());
-            foreach(var e in res2) Console.WriteLine(e.ToString());
-            
         }
 
         /// <summary>
@@ -232,9 +228,6 @@ namespace LinqConsoleApp
                     , e.Salary
                     });
 
-            Console.WriteLine("Przykład 2");
-            foreach(var e in res) Console.WriteLine(e.ToString());
-            foreach(var e in res2) Console.WriteLine(e.ToString());
         }
 
         /// <summary>
@@ -243,11 +236,8 @@ namespace LinqConsoleApp
         public void Przyklad3()
         {
             var res = (from emp in Emps select emp.Salary).Max();
-            var res2 = Emps.Max(e => e.Salary);
 
-            Console.WriteLine("Przykład 3");
-            Console.WriteLine(res.ToString());
-            Console.WriteLine(res2.ToString());
+            var res2 = Emps.Max(e => e.Salary);
 
         }
 
@@ -261,10 +251,6 @@ namespace LinqConsoleApp
                    select emp.Ename;
 
             var res2 = Emps.Where(e => e.Salary == Emps.Max(e => e.Salary));
-
-            Console.WriteLine("Przykład 4");
-            foreach(var e in res) Console.WriteLine(e.ToString());
-            foreach(var e in res2) Console.WriteLine(e.ToString());
 
         }
 
@@ -280,10 +266,6 @@ namespace LinqConsoleApp
                    };
 
             var res2 = Emps.Select(e => new {Nazwisko = e.Ename, Praca = e.Job});
-           
-            Console.WriteLine("Przykład 5");
-           foreach(var e in res) Console.WriteLine(e.ToString());
-           foreach(var e in res2) Console.WriteLine(e.ToString());
 
         }
 
@@ -302,8 +284,15 @@ namespace LinqConsoleApp
                     dept.Dname
                 };
 
-            var res2 = Emps.Select(e => new {Nazwisko = e.Ename, Praca = e.Job});
-   
+            var res2 = Emps
+                .Join(Depts,
+                  e => e.Deptno,
+                  d => d.Deptno,
+                  (e, d) => new { 
+                    E = e, 
+                    D = d 
+                 });
+
         }
 
         /// <summary>
@@ -311,7 +300,18 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad7()
         {
-
+            var res = from emp in Emps
+                group emp by emp.Job into jobs
+                select new
+                {
+                    Jobs = jobs.Key,
+                    Count = jobs.Count(),
+                };
+            
+                var res2 = Emps.GroupBy(e => e.Job).Select( ee => new { Job = ee.Key, Licznik = ee.Count() });
+           foreach(var x in res) Console.WriteLine(x.ToString());
+           foreach(var x in res2) Console.WriteLine(x.ToString());
+                
         }
 
         /// <summary>
@@ -320,6 +320,8 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad8()
         {
+            // brak operatora Any w SQL query
+            var res2 = Emps.Any(e => e.Job == "Backend programmer");
 
         }
 
@@ -329,7 +331,7 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad9()
         {
-
+            
         }
 
         /// <summary>
