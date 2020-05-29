@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace LinqConsoleApp
@@ -309,8 +310,6 @@ namespace LinqConsoleApp
                 };
             
                 var res2 = Emps.GroupBy(e => e.Job).Select( ee => new { Job = ee.Key, Licznik = ee.Count() });
-           foreach(var x in res) Console.WriteLine(x.ToString());
-           foreach(var x in res2) Console.WriteLine(x.ToString());
                 
         }
 
@@ -331,7 +330,17 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad9()
         {
-            
+            var res = (from emp in Emps
+                    where emp.Job == "Frontend programmer"
+                    orderby emp.HireDate descending
+                    select emp).First();
+
+            var res2 = Emps
+                .Where(e => e.Job =="Frontend programmer")
+                .OrderByDescending(e => e.HireDate)
+                .Select(e =>  new {e.Empno, e.Ename })
+                .First();
+
         }
 
         /// <summary>
@@ -341,7 +350,7 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad10Button_Click()
         {
-
+       
         }
 
         //Znajdź pracownika z najwyższą pensją wykorzystując metodę Aggregate()
